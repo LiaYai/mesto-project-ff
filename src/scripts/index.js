@@ -1,12 +1,14 @@
+import {initialCards} from './cards.js'
+import '../pages/index.css';
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
+
 // @todo: DOM узлы
 const cardTemplateItem = cardTemplate.querySelector('.card');
 const cardList = document.querySelector('.places__list');
 
-
 // @todo: Функция создания карточки
-function addCard (card, delCard) {
+function createCard (card, delCard) {
   const cardItem = cardTemplateItem.cloneNode(true);
   
   cardItem.querySelector('.card__image').src = card.link;
@@ -24,5 +26,25 @@ function deleteCard (item) {
 }; 
 
 initialCards.forEach((item) => {
-  cardList.append(addCard(item,deleteCard));
+  cardList.append(createCard(item,deleteCard));
 });
+
+
+//ПР-6
+const editButton = document.querySelector('.profile__edit-button');
+const popapProfile = document.querySelector('.popup_type_edit');
+const closePopapButton = popapProfile.querySelector('.popup__close');
+
+//Функция открытия попапа
+function openPopap() {
+  popapProfile.classList.add('popup_is-opened');
+} 
+
+//Функция закрытия попапа
+function closePopap() {
+  popapProfile.classList.remove('popup_is-opened');
+}
+
+//Открытие попапа для редактирования профиля
+editButton.addEventListener('click', openPopap);
+closePopapButton.addEventListener('click', closePopap);
