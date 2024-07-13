@@ -31,20 +31,60 @@ initialCards.forEach((item) => {
 
 
 //ПР-6
-const editButton = document.querySelector('.profile__edit-button');
-const popapProfile = document.querySelector('.popup_type_edit');
-const closePopapButton = popapProfile.querySelector('.popup__close');
+const editProfileButton = document.querySelector('.profile__edit-button');
+const addCardButton = document.querySelector('.profile__add-button');
+const places = document.querySelector('.places');
+const profilePopup = document.querySelector('.popup_type_edit');
+const addCardPopup = document.querySelector('.popup_type_new-card');
+const cardPopup = document.querySelector('.popup_type_image');
+const closeButtons = document.querySelectorAll('.popup__close');
 
-//Функция открытия попапа
-function openPopap() {
-  popapProfile.classList.add('popup_is-opened');
-} 
+//Функция для открывания попапа
+function openPopup(popup) {
+  popup.classList.add('popup_is-opened');
+}
 
-//Функция закрытия попапа
-function closePopap() {
-  popapProfile.classList.remove('popup_is-opened');
+//Функция для закрытия попапа
+function closePopup(evt) {
+  evt.target.closest('.popup').classList.remove('popup_is-opened');
 }
 
 //Открытие попапа для редактирования профиля
-editButton.addEventListener('click', openPopap);
-closePopapButton.addEventListener('click', closePopap);
+editProfileButton.addEventListener('click', function() {
+  openPopup(profilePopup)
+});
+
+//Открытие попапа для добавления нового места
+addCardButton.addEventListener('click', function() {
+  openPopup(addCardPopup)
+});
+
+//Открытие попапа для приближение картинки для каждого места
+places.addEventListener('click', function (evt) {
+  if (evt.target.classList.contains('card__image')) {
+    openPopup(cardPopup);
+    cardPopup.querySelector('.popup__image').src = evt.target.src; 
+    cardPopup.querySelector('.popup__image').alt = evt.target.alt;
+    cardPopup.querySelector('.popup__caption').textContent = evt.target.alt;
+  }
+})
+
+//Навесила слушатель на кнопку закрытия для каждого попапа
+closeButtons.forEach((item) => {
+  item.addEventListener('click', closePopup)
+})
+
+//Закрыть попап кликом на оверлей
+document.addEventListener('click', function(evt) {
+  const popup = evt.target.closest('.popup');
+  if (popup && evt.target.classList.contains('popup_is-opened')) 
+    closePopup(evt);
+})
+
+//Закрыть попап нажатием Esc
+document.addEventListener('keydown', function(evt) {
+  const activePopup = document.querySelector('.popup_is-opened');
+  if (evt.key === 'Escape' && activePopup) {
+    activePopup.classList.remove('popup_is-opened');
+  }
+});
