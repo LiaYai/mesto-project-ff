@@ -7,7 +7,6 @@ module.exports = {
   entry: { main: './src/scripts/index.js' },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    //assetModuleFilename: 'images/[hash][ext][query]',
     filename: 'main.js',
             publicPath: ''
   },
@@ -26,8 +25,18 @@ module.exports = {
         exclude: '/node_modules/'
       },
       {
-        test: /\.(png|svg|jpg|gif|woff(2)?|eot|ttf|otf)$/,
-        type: 'asset/resource'
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+        generator: {
+            filename: 'images/[name].[hash][ext]',
+        }
+      },
+      {
+        test: /\.(woff(2)?|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+            filename: 'fonts/[name].[hash][ext]',
+        }
       },
       {
         test: /\.css$/,

@@ -11,6 +11,7 @@ const addCardPopup = document.querySelector('.popup_type_new-card');
 const cardPopup = document.querySelector('.popup_type_image');
 
 const popups = document.querySelectorAll('.popup');
+const closeButtons = document.querySelectorAll('.popup__close');
 
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
@@ -33,7 +34,9 @@ popups.forEach((popup) => popup.classList.add('popup_is-animated'));
 
 // Открытие попапа редактирования профиля
 editProfileButton.addEventListener('click', function() {
-  openPopup(profilePopup)
+  openPopup(profilePopup);
+  profileForm.elements.name.value = profileName.textContent;
+  profileForm.elements.description.value = profileDescription.textContent;
 });
 
 // Функция открытия попапа для увеличения картинки
@@ -49,16 +52,17 @@ addCardButton.addEventListener('click', function(evt) {
   openPopup(addCardPopup);
 });
 
-// При первом открытии попапа значения в форме редактирования профиля будут заполнены из заголовка и описания
-profileForm.elements.name.value = profileName.textContent;
-profileForm.elements.description.value = profileDescription.textContent;
+// Навешиваем на все кнопки закрытия попапа слушатель 
+closeButtons.forEach((button) => 
+  button.addEventListener('click',() => closePopup(button.closest('.popup')))
+);
 
 // Обработчик «отправки» формы редактирования профиля, хотя пока она никуда отправляться не будет
 function profileFormSubmit(evt) {
     evt.preventDefault();
     profileName.textContent = profileForm.elements.name.value;
     profileDescription.textContent = profileForm.elements.description.value;
-    closePopup(evt.target.closest('.popup'));
+    closePopup(profilePopup);
 }
 
 // Клик на сабмит у попапа редактирования профиля
@@ -68,9 +72,8 @@ profileForm.addEventListener('submit', profileFormSubmit);
 function addFormSubmit(evt) {
   evt.preventDefault();
   cardList.prepend(createCard (newPlaceLink.value, newPlaceName.value, deleteCard, likeCard, openCard));
-  newPlaceLink.value = '';
-  newPlaceName.value = '';
-  closePopup(evt.target.closest('.popup'));
+  closePopup(addCardPopup);
+  addCardForm.reset();
 }
 
 // Клик на сабмит у попапа добавления нового места
