@@ -1,6 +1,7 @@
 import {initialCards} from './cards.js';
 import {createCard, deleteCard, likeCard} from './card.js';
 import {openPopup, closePopup} from './modal.js';
+import { enableValidation, toggleButtonState, hideError } from './validation.js';
 import '../pages/index.css';
 
 // DOM узлы
@@ -50,6 +51,7 @@ function openCard(link, name) {
 // Открытие попапа добавления нового места
 addCardButton.addEventListener('click', function(evt) {
   openPopup(addCardPopup);
+  addCardForm.reset();
 });
 
 // Навешиваем на все кнопки закрытия попапа слушатель 
@@ -58,8 +60,7 @@ closeButtons.forEach((button) =>
 );
 
 // Обработчик «отправки» формы редактирования профиля, хотя пока она никуда отправляться не будет
-function profileFormSubmit(evt) {
-    evt.preventDefault();
+function profileFormSubmit() {
     profileName.textContent = profileForm.elements.name.value;
     profileDescription.textContent = profileForm.elements.description.value;
     closePopup(profilePopup);
@@ -70,12 +71,14 @@ profileForm.addEventListener('submit', profileFormSubmit);
 
 // Функция создания нового места
 function addFormSubmit(evt) {
-  evt.preventDefault();
   cardList.prepend(createCard (newPlaceLink.value, newPlaceName.value, deleteCard, likeCard, openCard));
   closePopup(addCardPopup);
   addCardForm.reset();
+  addCardForm.button.classList.add('popup__button_inactive');
+  addCardForm.button.disabled = true;
 }
 
 // Клик на сабмит у попапа добавления нового места
 addCardForm.addEventListener('submit', addFormSubmit);
 
+enableValidation();
