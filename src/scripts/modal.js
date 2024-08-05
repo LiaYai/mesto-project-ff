@@ -1,5 +1,3 @@
-import { hideError } from "./validation";
-
 export {openPopup, closePopup}
 
 // Функция для открывания попапа
@@ -14,12 +12,6 @@ function closePopup(popup) {
   popup.classList.remove('popup_is-opened');
   document.removeEventListener('click', closePopupOverley);
   document.removeEventListener('keydown', closePopupEsc);
-
-  // Сомнительно, но пока красивее вариант в голову не пришел
-  const form = popup.querySelector('.popup__form');
-  const inputList = Array.from(popup.querySelectorAll('.popup__input'));
-  
-  inputList.forEach((input) => hideError(form, input));
 }
 
 // Функция закрытия попапа кликом на оверлей

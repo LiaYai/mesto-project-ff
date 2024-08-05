@@ -1,4 +1,4 @@
-export {createCard, deleteCard, likeCard}
+export {createCard, deleteCard, likeCard, openCard}
 
 // Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
@@ -29,4 +29,12 @@ function deleteCard (item) {
 // Функция лайка
 function likeCard(item) {
   item.querySelector('.card__like-button').classList.toggle('card__like-button_is-active');
+}
+
+// Функция открытия попапа для увеличения картинки
+function openCard(link, name) {
+  openPopup(cardPopup);
+  cardPopup.querySelector('.popup__image').src = link; 
+  cardPopup.querySelector('.popup__image').alt = name;
+  cardPopup.querySelector('.popup__caption').textContent = name;
 }
