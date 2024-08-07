@@ -10,12 +10,14 @@
   background: #000;
   border-radius: 2px;
   border: none;
-  transition: visibility 0s, background 0.3s;
+  transition:
+    visibility 0s,
+    background 0.3s;
   margin-top: 53px;
 }
 
 .popup__button:hover:enabled {
-  background: rgba(0, 0, 0, 0.8);
+  background: rgb(0 0 0 / 0.8);
   cursor: pointer;
 }
 
@@ -27,6 +29,7 @@
 }
 
 @media screen and (max-width: 568px) {
+
   .popup__button {
     font-size: 14px;
     line-height: 17px;

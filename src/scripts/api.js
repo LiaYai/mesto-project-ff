@@ -1,10 +1,9 @@
-
 const config = {
   baseUrl: 'https://nomoreparties.co/v1/wff-cohort-20',
   headers: {
     authorization: 'b215d746-336a-4e03-bc3a-fd6ee9451d58',
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 };
 
 const handleResponse = (response) => {
@@ -22,17 +21,15 @@ export const handleError = (error) => {
 // Загрузка данных пользователя
 export const getProfileInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
-    headers: config.headers
-  })
-  .then(handleResponse)
+    headers: config.headers,
+  }).then(handleResponse);
 };
 
 // Загрузка карточек
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
-    headers: config.headers
-  })
-  .then(handleResponse)
+    headers: config.headers,
+  }).then(handleResponse);
 };
 
 // Отправить обновленные данные пользователя
@@ -42,10 +39,9 @@ export const patchProfile = (newProfileName, newProfileDescription) => {
     headers: config.headers,
     body: JSON.stringify({
       name: newProfileName,
-      about: newProfileDescription
-    })
-  })
-  .then(handleResponse)
+      about: newProfileDescription,
+    }),
+  }).then(handleResponse);
 };
 
 // Добавить новую карточку
@@ -55,37 +51,33 @@ export const postNewCard = (cardName, cardLink) => {
     headers: config.headers,
     body: JSON.stringify({
       name: cardName,
-      link: cardLink
-    })
-  })
-  .then(handleResponse)
+      link: cardLink,
+    }),
+  }).then(handleResponse);
 };
 
 // Удалить карточку
 export const removeCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
-    headers: config.headers
-  })
-  .then(handleResponse)
+    headers: config.headers,
+  }).then(handleResponse);
 };
 
 // Поставить лайк
 export const putLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
-    headers: config.headers
-  })
-  .then(handleResponse)
+    headers: config.headers,
+  }).then(handleResponse);
 };
 
 //Удалить лайк
 export const deleteLike = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: 'DELETE',
-    headers: config.headers
-  })
-  .then(handleResponse)
+    headers: config.headers,
+  }).then(handleResponse);
 };
 
 // Отправить новый аватар
@@ -94,16 +86,14 @@ export const patchNewAvatar = (newAvatarUrl) => {
     method: 'PATCH',
     headers: config.headers,
     body: JSON.stringify({
-      avatar: newAvatarUrl
-    })
-  })
-  .then(handleResponse)
+      avatar: newAvatarUrl,
+    }),
+  }).then(handleResponse);
 };
 
 // Проверка, что в ссылке картинка
 export const checkUrl = (newAvatarUrl) => {
   return fetch(`${newAvatarUrl}`, {
-    method: 'HEAD'
-    }
-  )
+    method: 'HEAD',
+  });
 };

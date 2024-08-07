@@ -1,7 +1,15 @@
 import { createCard, openDeletePopup, likeCard, openCard } from './card.js';
 import { openPopup, closePopup } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getInitialCards, getProfileInfo, patchProfile, postNewCard, handleError, patchNewAvatar, checkUrl } from './api.js';
+import {
+  getInitialCards,
+  getProfileInfo,
+  patchProfile,
+  postNewCard,
+  handleError,
+  patchNewAvatar,
+  checkUrl,
+} from './api.js';
 import '../pages/index.css';
 
 // DOM узлы
@@ -35,15 +43,15 @@ const validationConfig = {
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
+  errorClass: 'popup__error_visible',
 };
 
 // Плавное открытие попапа
 popups.forEach((popup) => popup.classList.add('popup_is-animated'));
 
 // Навешиваем на все кнопки закрытия попапа слушатель
-closeButtons.forEach((button) => 
-  button.addEventListener('click',() => closePopup(button.closest('.popup')))
+closeButtons.forEach((button) =>
+  button.addEventListener('click', () => closePopup(button.closest('.popup')))
 );
 
 // Сообщение о загрузке у кнопки 'submit'
@@ -53,28 +61,29 @@ function renderLoading(isLoading, popup) {
     button.textContent = 'Сохранение...';
   } else {
     button.textContent = 'Сохранить';
-  };
-};
+  }
+}
 
 Promise.all([getProfileInfo(), getInitialCards()])
 
-    // Заполнение данными профиля 
-    .then(([data, arr]) => {
-      profileName.textContent = data.name;
-      profileDescription.textContent = data.about;
-      profileImage.style.backgroundImage = `url(${data.avatar})`;
-      const myId = data._id;
+  // Заполнение данными профиля
+  .then(([data, arr]) => {
+    profileName.textContent = data.name;
+    profileDescription.textContent = data.about;
+    profileImage.style.backgroundImage = `url(${data.avatar})`;
+    const myId = data._id;
 
     // Заполнение галереи карточками
-      arr.forEach((item) => {
-        cardList.append(createCard(item, myId, openDeletePopup, likeCard, openCard));
-      })
-    })
-    .catch(handleError);
-
+    arr.forEach((item) => {
+      cardList.append(
+        createCard(item, myId, openDeletePopup, likeCard, openCard)
+      );
+    });
+  })
+  .catch(handleError);
 
 // Открытие попапа редактирования профиля
-editProfileButton.addEventListener('click', function() {
+editProfileButton.addEventListener('click', function () {
   openPopup(profilePopup);
   clearValidation(profileForm, validationConfig);
   profileForm.elements.name.value = profileName.textContent;
@@ -82,7 +91,7 @@ editProfileButton.addEventListener('click', function() {
 });
 
 // Открытие попапа добавления нового места
-addCardButton.addEventListener('click', function(evt) {
+addCardButton.addEventListener('click', function (evt) {
   openPopup(addCardPopup);
   clearValidation(addCardForm, validationConfig);
   addCardForm.reset();
@@ -90,7 +99,7 @@ addCardButton.addEventListener('click', function(evt) {
 
 // Обработчик отправки формы редактирования профиля
 function profileFormSubmit() {
-  const newName = profileForm.elements.name.value; 
+  const newName = profileForm.elements.name.value;
   const newAbout = profileForm.elements.description.value;
 
   renderLoading(true, profileForm);
@@ -110,13 +119,15 @@ profileForm.addEventListener('submit', profileFormSubmit);
 // Функция создания нового места
 function addFormSubmit() {
   renderLoading(true, addCardForm);
-  postNewCard(newPlaceName.value,newPlaceLink.value)
-  .then((data) => {
-    cardList.prepend(createCard (data, data.owner._id, openDeletePopup, likeCard, openCard));
-    closePopup(addCardPopup);
-  })
-  .catch(handleError)
-  .finally(() => renderLoading(false, addCardForm));
+  postNewCard(newPlaceName.value, newPlaceLink.value)
+    .then((data) => {
+      cardList.prepend(
+        createCard(data, data.owner._id, openDeletePopup, likeCard, openCard)
+      );
+      closePopup(addCardPopup);
+    })
+    .catch(handleError)
+    .finally(() => renderLoading(false, addCardForm));
 }
 
 // Клик на сабмит у попапа добавления нового места
@@ -126,7 +137,7 @@ addCardForm.addEventListener('submit', addFormSubmit);
 enableValidation(validationConfig);
 
 // Открытие попапа для смены аватара
-profileImage.addEventListener('click', function(evt) {
+profileImage.addEventListener('click', function (evt) {
   openPopup(newAvatarPopup);
   clearValidation(newAvatarForm, validationConfig);
   newAvatarForm.reset();
@@ -136,18 +147,18 @@ profileImage.addEventListener('click', function(evt) {
 function changeAvatar() {
   renderLoading(true, newAvatarForm);
   checkUrl(newAvatarUrl.value)
-  .then((res) => {
-    console.log(res.headers.get('content-type'), res.status);
-  })
-  .catch(handleError);
+    .then((res) => {
+      console.log(res.headers.get('content-type'), res.status);
+    })
+    .catch(handleError);
   patchNewAvatar(newAvatarUrl.value)
-  .then((data) => {
-    profileImage.style.backgroundImage = `url(${data.avatar})`;
-    closePopup(newAvatarPopup);
-  })
-  .catch(handleError)
-  .finally(() => renderLoading(false, newAvatarForm));
-};
+    .then((data) => {
+      profileImage.style.backgroundImage = `url(${data.avatar})`;
+      closePopup(newAvatarPopup);
+    })
+    .catch(handleError)
+    .finally(() => renderLoading(false, newAvatarForm));
+}
 
 // Клик на сабмит у попапа смены аватара
 newAvatarForm.addEventListener('submit', changeAvatar);

@@ -4,6 +4,12 @@
   "description": "https://github.com/LiaYai/mesto-project-ff.git",
   "main": "index.js",
   "scripts": {
+    "check": "prettier --check './**/*.{html,css,js}'",
+    "format": "prettier --write './**/*.{html,css,js}'",
+    "lint": "stylelint '**/*.css'",
+    "lintfix": "stylelint '**/*.css' --fix",
+    "checkAll": "npm run check && npm run lint",
+    "fixAll": "npm run format && npm run lintfix",
     "build": "webpack --mode production",
     "dev": "webpack serve --mode development",
     "predeploy": "npm run build",
@@ -28,6 +34,8 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
-    "core-js": "^3.37.1"
+    "core-js": "^3.37.1",
+    "prettier": "^3.3.3",
+    "stylelint": "^16.8.1"
   }
 }

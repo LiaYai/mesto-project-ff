@@ -1,8 +1,8 @@
-@import url('./__logo/header__logo.css');
+@import url(./__logo/header__logo.css);
 
 .header {
   min-height: 120px;
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: Inter, Arial, sans-serif;
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -25,9 +25,11 @@
 }
 
 @media screen and (max-width: 480px) {
+
   .header {
     min-height: 85px;
   }
+
   .header::before {
     width: calc(100% + 40px);
   }

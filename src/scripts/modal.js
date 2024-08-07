@@ -1,4 +1,4 @@
-export {openPopup, closePopup}
+export { openPopup, closePopup };
 
 // Функция для открывания попапа
 function openPopup(popup) {
@@ -16,8 +16,7 @@ function closePopup(popup) {
 
 // Функция закрытия попапа кликом на оверлей
 function closePopupOverley(evt) {
-  if (evt.target.classList.contains('popup_is-opened')) 
-    closePopup(evt.target);
+  if (evt.target.classList.contains('popup_is-opened')) closePopup(evt.target);
 }
 
 // Функция закрытия попапа нажатием Esc
