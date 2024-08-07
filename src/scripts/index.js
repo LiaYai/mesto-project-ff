@@ -1,4 +1,4 @@
-import { createCard, openDeletePopup, likeCard, openCard } from './card.js';
+import { createCard, openDeletePopup, likeCard } from './card.js';
 import { openPopup, closePopup } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
 import {
@@ -8,7 +8,7 @@ import {
   postNewCard,
   handleError,
   patchNewAvatar,
-  checkUrl,
+  checkUrl
 } from './api.js';
 import '../pages/index.css';
 
@@ -18,6 +18,7 @@ const cardList = document.querySelector('.places__list');
 const profilePopup = document.querySelector('.popup_type_edit');
 const addCardPopup = document.querySelector('.popup_type_new-card');
 const newAvatarPopup = document.querySelector('.popup_type_new-avatar');
+const cardPopup = document.querySelector('.popup_type_image');
 
 const popups = document.querySelectorAll('.popup');
 const closeButtons = document.querySelectorAll('.popup__close');
@@ -53,6 +54,14 @@ popups.forEach((popup) => popup.classList.add('popup_is-animated'));
 closeButtons.forEach((button) =>
   button.addEventListener('click', () => closePopup(button.closest('.popup')))
 );
+
+// Функция открытия попапа для увеличения картинки
+function openCard(card) {
+  openPopup(cardPopup);
+  cardPopup.querySelector('.popup__image').src = card.link;
+  cardPopup.querySelector('.popup__image').alt = card.name;
+  cardPopup.querySelector('.popup__caption').textContent = card.name;
+}
 
 // Сообщение о загрузке у кнопки 'submit'
 function renderLoading(isLoading, popup) {

@@ -1,4 +1,4 @@
-export { createCard, openDeletePopup, likeCard, openCard };
+export { createCard, openDeletePopup, likeCard };
 import { closePopup, openPopup } from './modal';
 import { removeCard, handleError, putLike, deleteLike } from './api';
 
@@ -7,7 +7,6 @@ const cardTemplate = document.querySelector('#card-template').content;
 
 // DOM узлы
 const cardTemplateItem = cardTemplate.querySelector('.card');
-const cardPopup = document.querySelector('.popup_type_image');
 const deletePopup = document.querySelector('.popup_type_del-card');
 const deleteForm = document.forms['delete-place'];
 
@@ -16,10 +15,8 @@ function createCard(card, myId, openDelPopup, like, open) {
   const cardItem = cardTemplateItem.cloneNode(true);
   const cardImage = cardItem.querySelector('.card__image');
   const cardTitle = cardItem.querySelector('.card__title');
-
   const likeButton = cardItem.querySelector('.card__like-button');
   const likeCounter = cardItem.querySelector('.card__like-number');
-
   const deleteButton = cardItem.querySelector('.card__delete-button');
 
   // Заполняет карточку данными
@@ -52,9 +49,10 @@ function createCard(card, myId, openDelPopup, like, open) {
 
   return cardItem;
 }
+// Конец создания карточки
 
 // Функция удаления карточки
-function deleteCard(card, cardItem) {
+function deleteCard(card, cardItem, popup) {
   removeCard(card._id)
     .then(() => {
       closePopup(deletePopup);
@@ -67,7 +65,7 @@ function deleteCard(card, cardItem) {
 function openDeletePopup(card, cardItem) {
   openPopup(deletePopup);
   deleteForm.addEventListener('submit', () => {
-    deleteCard(card, cardItem);
+    deleteCard(card, cardItem, deletePopup);
   });
 }
 
@@ -89,10 +87,5 @@ function likeCard(cardId, likeButton, likeCounter) {
   likeButton.classList.toggle('card__like-button_is-active');
 }
 
-// Функция открытия попапа для увеличения картинки
-function openCard(card) {
-  openPopup(cardPopup);
-  cardPopup.querySelector('.popup__image').src = card.link;
-  cardPopup.querySelector('.popup__image').alt = card.name;
-  cardPopup.querySelector('.popup__caption').textContent = card.name;
-}
+
+
