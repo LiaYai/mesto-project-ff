@@ -29,7 +29,7 @@
   </main>
   <footer class="footer page__section">
     <p class="footer__copyright">
-      © 2021 Mesto Russia
+      © 2024 Mesto Russia
     </p>
   </footer>
   <div class="popup popup_type_edit">
@@ -109,6 +109,34 @@
       <p class="popup__caption"></p>
     </div>
   </div>
+  <div class="popup popup_type_del-card">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Вы уверены?</h3>
+      <form class="popup__form" name="delete-place">
+        <button type="submit" name="button" class="button popup__button">Да</button>
+      </form>
+    </div>
+  </div>
+  <div class="popup popup_type_new-avatar">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="new-avatar">
+        <label class="popup__label">
+          <input type="url"
+                name="avatar-url"
+                class="popup__input popup__input_type_url"
+                id="avatar-url"
+                placeholder="Ссылка на аватар"
+                required
+          >
+          <span class='popup__error avatar-url-input-error'></span>
+        </label>
+        <button type="submit" name="button" class="button popup__button">Сохранить</button>
+      </form>
+    </div>
+  </div>
 </div>
 
 <template id="card-template">
@@ -118,7 +146,10 @@
     <div class="card__description">
       <h2 class="card__title">
       </h2>
-      <button type="button" class="card__like-button"></button>
+      <div class="card__likes">
+        <button type="button" class="card__like-button"></button>
+        <div class="card__like-number"></div>
+      </div>
     </div>
   </li>
 </template>

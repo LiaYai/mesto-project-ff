@@ -9,6 +9,15 @@
   margin: 0 29px 0 0;
 }
 
+.profile__image:hover {
+  /* background-image: url('../../../images/Vector.png'); */
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
+  margin: 0 29px 0 0;
+}
+
 @media screen and (max-width: 740px) {
   .profile__image {
     margin: 0 10px 0 0;

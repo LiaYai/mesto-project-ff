@@ -5,42 +5,105 @@ const config = {
     authorization: 'b215d746-336a-4e03-bc3a-fd6ee9451d58',
     'Content-Type': 'application/json'
   }
-}
+};
+
+const handleResponse = (response) => {
+  if (response.ok) {
+    return response.json();
+  } else {
+    return Promise.reject(`Ошибка: ${response.status}`);
+  }
+};
+
+export const handleError = (error) => {
+  console.log(error);
+};
 
 // Загрузка данных пользователя
 export const getProfileInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-  .then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-  })
-}
+  .then(handleResponse)
+};
 
-//Загрузка карточек
+// Загрузка карточек
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-  .then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-  })
-} 
+  .then(handleResponse)
+};
 
-// const patchEdi
-//   fetch(`${config.baseUrl}/users/me`, {
-//     method: 'PATCH',
-//     headers: config.headers,
-//     body: JSON.stringify({
-//       name: 'Marie Skłodowska Curie',
-//       about: 'Physicist and Chemist'
-//     })
-//   });
+// Отправить обновленные данные пользователя
+export const patchProfile = (newProfileName, newProfileDescription) => {
+  return fetch(`${config.baseUrl}/users/me`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      name: newProfileName,
+      about: newProfileDescription
+    })
+  })
+  .then(handleResponse)
+};
+
+// Добавить новую карточку
+export const postNewCard = (cardName, cardLink) => {
+  return fetch(`${config.baseUrl}/cards`, {
+    method: 'POST',
+    headers: config.headers,
+    body: JSON.stringify({
+      name: cardName,
+      link: cardLink
+    })
+  })
+  .then(handleResponse)
+};
+
+// Удалить карточку
+export const removeCard = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: 'DELETE',
+    headers: config.headers
+  })
+  .then(handleResponse)
+};
+
+// Поставить лайк
+export const putLike = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: 'PUT',
+    headers: config.headers
+  })
+  .then(handleResponse)
+};
+
+//Удалить лайк
+export const deleteLike = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: 'DELETE',
+    headers: config.headers
+  })
+  .then(handleResponse)
+};
+
+// Отправить новый аватар
+export const patchNewAvatar = (newAvatarUrl) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar: newAvatarUrl
+    })
+  })
+  .then(handleResponse)
+};
+
+// Проверка, что в ссылке картинка
+export const checkUrl = (newAvatarUrl) => {
+  return fetch(`${newAvatarUrl}`, {
+    method: 'HEAD'
+    }
+  )
+};
