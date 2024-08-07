@@ -16,7 +16,6 @@ const closeButtons = document.querySelectorAll('.popup__close');
 
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
-//const changeAvatarButton = document.querySelector('.profile__image');
 
 const profileForm = document.forms['edit-profile'];
 const profileName = document.querySelector('.profile__title');
@@ -42,6 +41,21 @@ const validationConfig = {
 // Плавное открытие попапа
 popups.forEach((popup) => popup.classList.add('popup_is-animated'));
 
+// Навешиваем на все кнопки закрытия попапа слушатель
+closeButtons.forEach((button) => 
+  button.addEventListener('click',() => closePopup(button.closest('.popup')))
+);
+
+// Сообщение о загрузке у кнопки 'submit'
+function renderLoading(isLoading, popup) {
+  const button = popup.querySelector('.popup__button');
+  if (isLoading) {
+    button.textContent = 'Сохранение...';
+  } else {
+    button.textContent = 'Сохранить';
+  };
+};
+
 Promise.all([getProfileInfo(), getInitialCards()])
 
     // Заполнение данными профиля 
@@ -58,6 +72,7 @@ Promise.all([getProfileInfo(), getInitialCards()])
     })
     .catch(handleError);
 
+
 // Открытие попапа редактирования профиля
 editProfileButton.addEventListener('click', function() {
   openPopup(profilePopup);
@@ -73,23 +88,19 @@ addCardButton.addEventListener('click', function(evt) {
   addCardForm.reset();
 });
 
-// Навешиваем на все кнопки закрытия попапа слушатель 
-closeButtons.forEach((button) => 
-  button.addEventListener('click',() => closePopup(button.closest('.popup')))
-);
-
 // Обработчик отправки формы редактирования профиля
 function profileFormSubmit() {
   const newName = profileForm.elements.name.value; 
   const newAbout = profileForm.elements.description.value;
 
+  renderLoading(true, profileForm);
   patchProfile(newName, newAbout)
     .then((newData) => {
       profileName.textContent = newData.name;
       profileDescription.textContent = newData.about;
     })
-    .catch(handleError);
-
+    .catch(handleError)
+    .finally(() => renderLoading(false, profileForm));
   closePopup(profilePopup);
 }
 
@@ -98,17 +109,20 @@ profileForm.addEventListener('submit', profileFormSubmit);
 
 // Функция создания нового места
 function addFormSubmit() {
+  renderLoading(true, addCardForm);
   postNewCard(newPlaceName.value,newPlaceLink.value)
   .then((data) => {
     cardList.prepend(createCard (data, data.owner._id, openDeletePopup, likeCard, openCard));
     closePopup(addCardPopup);
   })
-  .catch(handleError);
+  .catch(handleError)
+  .finally(() => renderLoading(false, addCardForm));
 }
 
 // Клик на сабмит у попапа добавления нового места
 addCardForm.addEventListener('submit', addFormSubmit);
 
+// Валидация всех форм в документе
 enableValidation(validationConfig);
 
 // Открытие попапа для смены аватара
@@ -120,6 +134,7 @@ profileImage.addEventListener('click', function(evt) {
 
 // Обработчик формы замены аватара
 function changeAvatar() {
+  renderLoading(true, newAvatarForm);
   checkUrl(newAvatarUrl.value)
   .then((res) => {
     console.log(res.headers.get('content-type'), res.status);
@@ -130,7 +145,8 @@ function changeAvatar() {
     profileImage.style.backgroundImage = `url(${data.avatar})`;
     closePopup(newAvatarPopup);
   })
-  .catch(handleError);
+  .catch(handleError)
+  .finally(() => renderLoading(false, newAvatarForm));
 };
 
 // Клик на сабмит у попапа смены аватара

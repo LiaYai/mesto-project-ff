@@ -14,7 +14,9 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>);"></div>
+      <div class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>);">
+        <div class="profile__image-cover"></div>
+      </div>
       <div class="profile__info">
         <h1 class="profile__title">Жак-Ив Кусто</h1>
         <button class="profile__edit-button" type="button"></button>
@@ -114,7 +116,7 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Вы уверены?</h3>
       <form class="popup__form" name="delete-place">
-        <button type="submit" name="button" class="button popup__button">Да</button>
+        <button type="submit" class="button popup__button">Да</button>
       </form>
     </div>
   </div>
@@ -133,7 +135,7 @@
           >
           <span class='popup__error avatar-url-input-error'></span>
         </label>
-        <button type="submit" name="button" class="button popup__button">Сохранить</button>
+        <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>
   </div>
