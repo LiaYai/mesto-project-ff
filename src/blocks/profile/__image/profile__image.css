@@ -15,8 +15,7 @@
   inset: 0;
   border-radius: 50%;
   opacity: 0;
-  background: url(../../../images/Vector.png) rgb(0 0 0 / 0.5) no-repeat
-    center;
+  background: url(../../../images/Vector.png) rgb(0 0 0 / 0.5) no-repeat center;
 }
 
 .profile__image-cover:hover {
