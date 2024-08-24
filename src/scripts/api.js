@@ -22,16 +22,14 @@ export const handleError = (error) => {
 export const getProfileInfo = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  })
-  .then(handleResponse);
+  }).then(handleResponse);
 };
 
 // Загрузка карточек
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  })
-  .then(handleResponse);
+  }).then(handleResponse);
 };
 
 // Отправить обновленные данные пользователя
@@ -43,8 +41,7 @@ export const patchProfile = (newProfileName, newProfileDescription) => {
       name: newProfileName,
       about: newProfileDescription,
     }),
-  })
-  .then(handleResponse);
+  }).then(handleResponse);
 };
 
 // Добавить новую карточку
@@ -56,8 +53,7 @@ export const postNewCard = (cardName, cardLink) => {
       name: cardName,
       link: cardLink,
     }),
-  })
-  .then(handleResponse);
+  }).then(handleResponse);
 };
 
 // Удалить карточку
@@ -65,26 +61,15 @@ export const removeCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
     headers: config.headers,
-  })
-  .then(handleResponse);
+  }).then(handleResponse);
 };
 
-// Поставить лайк
-export const putLike = (cardId) => {
+// Поставить или убрать лайк
+export const changeLike = (cardId, isLiked) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method: 'PUT',
+    method: isLiked ? 'PUT' : 'DELETE',
     headers: config.headers,
-  })
-  .then(handleResponse);
-};
-
-//Удалить лайк
-export const deleteLike = (cardId) => {
-  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method: 'DELETE',
-    headers: config.headers,
-  })
-  .then(handleResponse);
+  }).then(handleResponse);
 };
 
 // Отправить новый аватар
@@ -95,8 +80,7 @@ export const patchNewAvatar = (newAvatarUrl) => {
     body: JSON.stringify({
       avatar: newAvatarUrl,
     }),
-  })
-  .then(handleResponse);
+  }).then(handleResponse);
 };
 
 // Проверка, что в ссылке картинка

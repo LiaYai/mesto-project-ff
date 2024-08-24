@@ -9,8 +9,7 @@ import {
   handleError,
   patchNewAvatar,
   checkUrl,
-  putLike,
-  deleteLike,
+  changeLike,
   removeCard,
 } from './api.js';
 import '../pages/index.css';
@@ -31,8 +30,8 @@ const closeButtons = document.querySelectorAll('.popup__close');
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
 
-const deleteForm = document.forms['delete-place']; 
-const deletePopupButton =deleteForm.elements['delete-button'];
+const deleteForm = document.forms['delete-place'];
+const deletePopupButton = deleteForm.elements['delete-button'];
 const profileForm = document.forms['edit-profile'];
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
@@ -73,13 +72,13 @@ function renderLoading(isLoading, popup) {
 }
 
 // Обработчик открытия попапа удаления карточки
-function openDeletePopup(card, cardItem) {
+function openDeletePopup(card_id, cardItem) {
   openPopup(deletePopup);
   deletePopupButton.onclick = function () {
-    removeCard(card._id)
+    removeCard(card_id)
       .then(() => {
-        closePopup(deletePopup);
         cardItem.remove();
+        closePopup(deletePopup);
       })
       .catch(handleError);
   };
@@ -87,21 +86,13 @@ function openDeletePopup(card, cardItem) {
 
 // Обработчик лайка
 function likeCard(cardId, likeButton, likeCounter) {
-  if (likeButton.classList.contains('card__like-button_is-active')) {
-    deleteLike(cardId)
-      .then((res) => {
-        likeCounter.textContent = res.likes.length;
-        likeButton.classList.remove('card__like-button_is-active');
-      })
-      .catch(handleError);
-  } else {
-    putLike(cardId)
-      .then((res) => {
-        likeCounter.textContent = res.likes.length;
-        likeButton.classList.add('card__like-button_is-active');
-      })
-      .catch(handleError);
-  }
+  const isLike = likeButton.classList.contains('card__like-button_is-active');
+  changeLike(cardId, !isLike)
+    .then((res) => {
+      likeCounter.textContent = res.likes.length;
+      likeButton.classList.toggle('card__like-button_is-active');
+    })
+    .catch(handleError);
 }
 
 // Обработчик открытия попапа для увеличения картинки
@@ -114,17 +105,21 @@ function openCard(card) {
 
 Promise.all([getProfileInfo(), getInitialCards()])
 
-  // Заполнение данными профиля
-  .then(([data, arr]) => {
-    profileName.textContent = data.name;
-    profileDescription.textContent = data.about;
-    profileImage.style.backgroundImage = `url(${data.avatar})`;
-    const myId = data._id;
+  .then(([userData, cards]) => {
+    // Заполнение данными профиля
+    const myId = userData._id;
+    profileName.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+    profileImage.style.backgroundImage = `url(${userData.avatar})`;
 
     // Заполнение галереи карточками
-    arr.forEach((item) => {
+    cards.forEach((item) => {
       cardList.append(
-        createCard(item, myId, openDeletePopup, likeCard, openCard)
+        createCard(item, myId, {
+          openDelPopup: openDeletePopup,
+          doLike: likeCard,
+          open: openCard,
+        })
       );
     });
   })
@@ -153,9 +148,9 @@ function postProfileInfo() {
   renderLoading(true, profileForm);
   patchProfile(newName, newAbout)
     .then((newData) => {
-      closePopup(profilePopup);
       profileName.textContent = newData.name;
       profileDescription.textContent = newData.about;
+      closePopup(profilePopup);
     })
     .catch(handleError)
     .finally(() => renderLoading(false, profileForm));
@@ -170,10 +165,15 @@ function addFormSubmit() {
   postNewCard(newPlaceName.value, newPlaceLink.value)
     .then((data) => {
       cardList.prepend(
-        createCard(data, data.owner._id, openDeletePopup, likeCard, openCard)
+        createCard(data, data.owner._id, {
+          openDelPopup: openDeletePopup,
+          doLike: likeCard,
+          open: openCard,
+        })
       );
       closePopup(addCardPopup);
       addCardForm.reset();
+      clearValidation(addCardForm, validationConfig);
     })
     .catch(handleError)
     .finally(() => renderLoading(false, addCardForm));
@@ -198,15 +198,20 @@ function changeAvatar() {
   checkUrl(newAvatarUrl.value)
     .then((res) => {
       console.log(res.headers.get('content-type'), res.status);
+      if (
+        res.headers.get('content-type').startsWith('image/') &&
+        res.status === 200
+      ) {
+        patchNewAvatar(newAvatarUrl.value)
+          .then((data) => {
+            closePopup(newAvatarPopup);
+            profileImage.style.backgroundImage = `url(${data.avatar})`;
+          })
+          .catch(handleError)
+          .finally(() => renderLoading(false, newAvatarForm));
+      }
     })
     .catch(handleError);
-  patchNewAvatar(newAvatarUrl.value)
-  .then((data) => {
-    closePopup(newAvatarPopup);
-    profileImage.style.backgroundImage = `url(${data.avatar})`;
-  })
-  .catch(handleError)
-  .finally(() => renderLoading(false, newAvatarForm));
 }
 
 // Клик на сабмит у попапа смены аватара

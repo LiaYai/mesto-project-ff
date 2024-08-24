@@ -1,12 +1,15 @@
 export { createCard };
 
-const cardTemplate = document.querySelector('#card-template').content;
-
-const cardTemplateItem = cardTemplate.querySelector('.card');
+const getTemplate = () => {
+  return document
+    .querySelector('#card-template')
+    .content.querySelector('.card')
+    .cloneNode(true);
+};
 
 // Обработчик создания карточки
-function createCard(card, myId, openDelPopup, like, open) {
-  const cardItem = cardTemplateItem.cloneNode(true);
+function createCard(card, myId, { openDelPopup, doLike, open }) {
+  const cardItem = getTemplate();
   const cardImage = cardItem.querySelector('.card__image');
   const cardTitle = cardItem.querySelector('.card__title');
   const likeButton = cardItem.querySelector('.card__like-button');
@@ -20,27 +23,32 @@ function createCard(card, myId, openDelPopup, like, open) {
   likeCounter.textContent = card.likes.length;
 
   // Если я-создатель карточки, то кнопку удаления не показывает, иначе вешает слушатель для кнопки удаления
-  const isMine = myId === card.owner._id;
-  if (isMine) {
-    deleteButton.addEventListener('click', () => openDelPopup(card, cardItem));
+
+  if (openDelPopup && myId === card.owner._id) {
+    deleteButton.addEventListener('click', () =>
+      openDelPopup(card._id, cardItem)
+    );
   } else {
-    deleteButton.classList.add('card__delete-button_hidden');
+    deleteButton.remove();
   }
 
   // Есть ли мой лайк
-  const myLike = () => {
-    return card.likes.some((like) => like._id === myId);
-  };
+  const isLiked = () => card.likes.some((like) => like._id === myId);
+
   // Если мой лайк есть, то сердечко закрашивает
-  if (myLike()) {
+  if (isLiked()) {
     likeButton.classList.add('card__like-button_is-active');
   }
 
-  likeButton.addEventListener('click', () =>
-    like(card._id, likeButton, likeCounter)
-  );
+  if (doLike) {
+    likeButton.addEventListener('click', () =>
+      doLike(card._id, likeButton, likeCounter)
+    );
+  }
 
-  cardImage.addEventListener('click', () => open(card));
+  if (open) {
+    cardImage.addEventListener('click', () => open(card));
+  }
 
   return cardItem;
 }

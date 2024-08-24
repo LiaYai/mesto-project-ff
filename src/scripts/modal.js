@@ -4,14 +4,14 @@ export { openPopup, closePopup };
 function openPopup(popup) {
   popup.classList.add('popup_is-opened');
   document.addEventListener('mousedown', closePopupOverley);
-  document.addEventListener('keydown', closePopupEsc);
+  document.addEventListener('keyup', closePopupEsc);
 }
 
 // Функция для закрытия попапа
 function closePopup(popup) {
   popup.classList.remove('popup_is-opened');
-  document.removeEventListener('click', closePopupOverley);
-  document.removeEventListener('keydown', closePopupEsc);
+  document.removeEventListener('mousedown', closePopupOverley);
+  document.removeEventListener('keyup', closePopupEsc);
 }
 
 // Функция закрытия попапа кликом на оверлей
